@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+	<link href = "bootstrap.css" rel = "stylesheet">
+	<link href = "style.css" rel = "stylesheet">
+	<script src='https://cdn.firebase.com/v0/firebase.js'></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+
+</head>
+<body class = "container">
+	<div class = "row">
+		<div class = "top-info play-controls col-lg-3">
+			<button type="button" class="btn btn-primary" onclick="togglePlay();">Play / Stop</button>
+		</div>
+		<div class = "top-info time-stat col-lg-2">
+			<p>BPM: 90</p>
+			<p>4/4 Time</p>
+		</div>
+		<div class = "top-info col-lg-2 col-lg-offset-1">
+			<div class = "metronome off"></div>
+		</div>
+	</div>
+	<div class = "chord-viewer row text-center">
+		<div class = "chord active col-2">E</div>
+		<div class = "chord inactive col-2">B</div>
+		<div class = "chord inactive col-2">C#</div>
+		<div class = "chord inactive col-2">A</div>
+	</div>
+</body>
