@@ -33,7 +33,7 @@ $(document).ready(function() {
 			turnStuffOff();
 		} else {
 			var d = new Date();
-			startTime = d.getTime() + 1500 + offset;
+			startTime = d.getTime() + 2000 + offset;
 			myDataRef.update({startTime: startTime});
 			playing = true;
 		}
@@ -47,7 +47,7 @@ $(document).ready(function() {
 		beatInMeasure = -1;
 		activateChord(0);
 		clearInterval(startPlaying);
-		checkIfStarted = setInterval(checkStart, 100);
+		checkIfStarted = setInterval(checkStart, 50);
 	};
 
 	moveOn = function(){
@@ -97,6 +97,6 @@ $(document).ready(function() {
 		}
 	};
 	
-	checkIfStarted = setInterval(checkStart, 100);
+	checkIfStarted = setInterval(checkStart, 50);
 
 });
