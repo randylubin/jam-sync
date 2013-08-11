@@ -33,7 +33,7 @@ $(document).ready(function() {
 			turnStuffOff();
 		} else {
 			var d = new Date();
-			startTime = d.getTime() + 2000 + offset;
+			startTime = d.getTime() + 3000 + offset;
 			myDataRef.update({startTime: startTime});
 			playing = true;
 		}
