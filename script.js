@@ -6,6 +6,14 @@ $(document).ready(function() {
 		startTime = snapshot.val().startTime;
 	});
 
+	var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
+	offsetRef.on("value", function(snap) {
+		offset = snap.val();
+		console.log(offset);
+		estimatedServerTimeMs = new Date().getTime() + offset;
+	});
+	console.log(offset);
+
 	bpm = 90;
 	upperTimeSignature = 4;
 	lowerTimeSignature = 4;
@@ -17,6 +25,7 @@ $(document).ready(function() {
 	startTime = 9375935090405;
 	var startPlaying;
 	var checkIfStarted;
+	var offset;
 
 	togglePlay = function(){
 		if (playing) {
@@ -24,7 +33,7 @@ $(document).ready(function() {
 			turnStuffOff();
 		} else {
 			var d = new Date();
-			startTime = d.getTime() + 1500;
+			startTime = d.getTime() + 1500 + offset;
 			myDataRef.update({startTime: startTime});
 			playing = true;
 		}
@@ -80,7 +89,7 @@ $(document).ready(function() {
 
 	checkStart = function(){
 		var d = new Date();
-		if (playing === true && (d.getTime() >= startTime)) {
+		if (playing === true && ((d.getTime() + offset) >= startTime)) {
 			startPlaying = setInterval(moveOn, frequency);
 			clearInterval(checkIfStarted);
 		} else {
