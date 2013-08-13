@@ -9,7 +9,6 @@ $(document).ready(function() {
 	var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
 	offsetRef.on("value", function(snap) {
 		offset = snap.val();
-		$('.time-stat').text(offset);
 		console.log(offset);
 		estimatedServerTimeMs = new Date().getTime() + offset;
 	});
@@ -30,7 +29,6 @@ $(document).ready(function() {
 
 	togglePlay = function(){
 		if (playing) {
-			playing = false;
 			turnStuffOff();
 		} else {
 			var d = new Date();
@@ -44,9 +42,8 @@ $(document).ready(function() {
 	};
 
 	turnStuffOff = function(){
-		if (!playing) {
-			playing = false;
-		}
+		playing = false;
+		$('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 		currentChordNumber = -1;
 		beatInMeasure = -1;
 		activateChord(0);
@@ -56,14 +53,18 @@ $(document).ready(function() {
 
 	moveOn = function(){
 		var d = new Date();
-		if (playing === true && (d.getTime() + offset >= startTime)) {
-			beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
-			flashMetronome();
-			console.log('in move on', currentChordNumber);
-			if (beatInMeasure === 0) {
-				currentChordNumber = nextChord(currentChordNumber);
+		if (playing === true){
+			if (d.getTime() + offset >= startTime) {
+				beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
+				flashMetronome();
+				console.log('in move on', currentChordNumber);
+				if (beatInMeasure === 0) {
+					currentChordNumber = nextChord(currentChordNumber);
+				}
+				console.log('beep');
+			} else {
+				
 			}
-			console.log('beep');
 		} else {
 			turnStuffOff();
 		}
@@ -94,9 +95,14 @@ $(document).ready(function() {
 	checkStart = function(){
 		var d = new Date();
 
-		if (playing === true && ((d.getTime() + offset) >= startTime)) {
-			startPlaying = setInterval(moveOn, frequency);
-			clearInterval(checkIfStarted);
+		if (playing === true){
+			if ((d.getTime() + offset) >= startTime) {
+				$('.play-stop').removeClass('btn-warning').addClass('btn-danger');
+				startPlaying = setInterval(moveOn, frequency);
+				clearInterval(checkIfStarted);
+			} else {
+				$('.play-stop').removeClass('btn-primary').addClass('btn-warning');
+			}
 		} else {
 			console.log ('still checking');
 		}
