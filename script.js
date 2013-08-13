@@ -9,6 +9,7 @@ $(document).ready(function() {
 	var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
 	offsetRef.on("value", function(snap) {
 		offset = snap.val();
+		$('.time-stat').text(offset);
 		console.log(offset);
 		estimatedServerTimeMs = new Date().getTime() + offset;
 	});
