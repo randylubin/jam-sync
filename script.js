@@ -34,7 +34,7 @@ $(document).ready(function() {
 			turnStuffOff();
 		} else {
 			var d = new Date();
-			startTime = d.getTime() + 3000 + offset;
+			startTime = d.getTime() + 3000 - offset;
 			myDataRef.update({startTime: startTime});
 			playing = true;
 		}
@@ -91,7 +91,7 @@ $(document).ready(function() {
 	checkStart = function(){
 		var d = new Date();
 
-		if (playing === true && ((d.getTime() - offset) >= startTime)) {
+		if (playing === true && ((d.getTime() + offset) >= startTime)) {
 			startPlaying = setInterval(moveOn, frequency);
 			clearInterval(checkIfStarted);
 		} else {
