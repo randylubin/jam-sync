@@ -34,7 +34,7 @@ $(document).ready(function() {
 			turnStuffOff();
 		} else {
 			var d = new Date();
-			startTime = d.getTime() + 3000 + offset;
+			startTime = d.getTime() + 3000 - offset;
 			myDataRef.update({startTime: startTime});
 			playing = true;
 		}
@@ -44,6 +44,9 @@ $(document).ready(function() {
 	};
 
 	turnStuffOff = function(){
+		if (!playing) {
+			playing = false;
+		}
 		currentChordNumber = -1;
 		beatInMeasure = -1;
 		activateChord(0);
@@ -53,7 +56,7 @@ $(document).ready(function() {
 
 	moveOn = function(){
 		var d = new Date();
-		if (playing === true && (d.getTime() >= startTime)) {
+		if (playing === true && (d.getTime() + offset >= startTime)) {
 			beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
 			flashMetronome();
 			console.log('in move on', currentChordNumber);
@@ -91,7 +94,7 @@ $(document).ready(function() {
 	checkStart = function(){
 		var d = new Date();
 
-		if (playing === true && ((d.getTime() - offset) >= startTime)) {
+		if (playing === true && ((d.getTime() + offset) >= startTime)) {
 			startPlaying = setInterval(moveOn, frequency);
 			clearInterval(checkIfStarted);
 		} else {
