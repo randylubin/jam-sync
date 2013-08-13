@@ -90,7 +90,8 @@ $(document).ready(function() {
 
 	checkStart = function(){
 		var d = new Date();
-		if (playing === true && ((d.getTime() + offset) >= startTime)) {
+
+		if (playing === true && ((d.getTime() - offset) >= startTime)) {
 			startPlaying = setInterval(moveOn, frequency);
 			clearInterval(checkIfStarted);
 		} else {
