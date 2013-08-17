@@ -1,45 +1,10 @@
-//$(document).ready(function() {
-
-
-
-	// Angular
-	angular.module('project', ['firebase']).
-		value('fbURL', 'https://jam-sync.firebaseio.com/').
-		config(function($httpProvider){
-			delete $httpProvider.defaults.headers.common['X-Requested-With'];
-		}).
-		/*factory('Projects', function(angularFireCollection, fbURL) {
-			return angularFireCollection(fbURL);
-		}).*/
-		config(function($routeProvider) {
-			$routeProvider.
-				when('/', {controller:ListCtrl, templateUrl:'sync.html'}).
-				//when('/edit/:projectId', {controller:EditCtrl, templateUrl:'detail.html'}).
-				//when('/new', {controller:CreateCtrl, templateUrl:'detail.html'}).
-				otherwise({redirectTo:'/'});
-		});
-
-	function ListCtrl($scope, Projects) {
-		$scope.projects = Projects;
-	}
-/*
-		myapp.controller('MyCtrl', ['$scope', 'angularFire',
-			function MyCtrl($scope, angularFire) {
-
-			}
-		]);
-*/
-
-	// Firebase
-
+$(document).ready(function() {
 	var myDataRef = new Firebase('https://jam-sync.firebaseio.com/');
 	myDataRef.on('value', function(snapshot){
 		console.log('Playing', snapshot.val().playing);
 		playing = snapshot.val().playing;
 		startTime = snapshot.val().startTime;
 	});
-
-	// clock skew
 
 	var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
 	offsetRef.on("value", function(snap) {
@@ -48,8 +13,6 @@
 		estimatedServerTimeMs = new Date().getTime() + offset;
 	});
 	console.log(offset);
-
-	// basic setup
 
 	bpm = 90;
 	upperTimeSignature = 4;
@@ -106,7 +69,7 @@
 			turnStuffOff();
 		}
 	};
-/*
+
 	flashMetronome = function(){
 		$('.metronome').removeClass('off').addClass('flashOn');
 		setTimeout(function(){$('.metronome').removeClass('flashOn').addClass('off');}, 100);
@@ -146,5 +109,5 @@
 	};
 	
 	checkIfStarted = setInterval(checkStart, 50);
-*/
-//});
+
+});
