@@ -11,18 +11,16 @@
 		config(function($httpProvider){
 			delete $httpProvider.defaults.headers.common['X-Requested-With'];
 		}).
-		/*factory('Projects', function(angularFireCollection, fbURL) {
-			return angularFireCollection(fbURL);
-		}).*/
+
 		config(function($routeProvider) {
 			$routeProvider.
-				when('/', {controller:ListCtrl, templateUrl:'sync.html'}).
+				when('/', {controller:SyncCtrl, templateUrl:'sync.html'}).
 				//when('/edit/:projectId', {controller:EditCtrl, templateUrl:'detail.html'}).
 				//when('/new', {controller:CreateCtrl, templateUrl:'detail.html'}).
 				otherwise({redirectTo:'/'});
 		});
 
-	function ListCtrl($scope, Projects) {
+	function SyncCtrl($scope, Projects) {
 		$scope.projects = Projects;
 	}
 /*
@@ -83,7 +81,7 @@
 
 	turnStuffOff = function(){
 		playing = false;
-		//$('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
+		//angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 		currentChordNumber = -1;
 		beatInMeasure = -1;
 		activateChord(0);
@@ -109,10 +107,10 @@
 			turnStuffOff();
 		}
 	};
-/*
+
 	flashMetronome = function(){
-		$('.metronome').removeClass('off').addClass('flashOn');
-		setTimeout(function(){$('.metronome').removeClass('flashOn').addClass('off');}, 100);
+		angular.element('.metronome').removeClass('off').addClass('flashOn');
+		setTimeout(function(){angular.element('.metronome').removeClass('flashOn').addClass('off');}, 100);
 	};
 
 	nextChord = function(chordNumber){
@@ -124,12 +122,12 @@
 	};
 
 	activateChord = function(chordNumber){
-		$('.chord-viewer > div.active').removeClass('active').addClass('inactive');
-		$('.chord-viewer > div:nth-child('+ chordNumber +')').addClass('active').removeClass('inactive');
+		angular.element('.chord-viewer > div.active').removeClass('active').addClass('inactive');
+		angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').addClass('active').removeClass('inactive');
 	};
 
 	deactivateChord = function(chordNumber){
-		$('.chord-viewer > div:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
+		angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
 	};
 
 	checkStart = function(){
@@ -137,11 +135,11 @@
 
 		if (playing === true){
 			if ((d.getTime() + offset) >= startTime) {
-				$('.play-stop').removeClass('btn-warning').addClass('btn-danger');
+				angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
 				startPlaying = setInterval(moveOn, frequency);
 				clearInterval(checkIfStarted);
 			} else {
-				$('.play-stop').removeClass('btn-primary').addClass('btn-warning');
+				angular.element('.play-stop').removeClass('btn-primary').addClass('btn-warning');
 			}
 		} else {
 			console.log ('still checking');
@@ -149,5 +147,5 @@
 	};
 	
 	checkIfStarted = setInterval(checkStart, 50);
-*/
+
 //});
