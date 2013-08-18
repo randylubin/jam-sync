@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 $(document).ready(function() {
 =======
 //$(document).ready(function() {
@@ -29,13 +30,30 @@ $(document).ready(function() {
 /*
 		myapp.controller('MyCtrl', ['$scope', 'angularFire',
 			function MyCtrl($scope, angularFire) {
+=======
+>>>>>>> gh-pages
 
-			}
-		]);
-*/
+// Angular
+angular.module('project', ['firebase']).
+	value('fbURL', 'https://jam-sync.firebaseio.com/').
+	factory('Projects', function(angularFireCollection, fbURL) {
+		return angularFireCollection(fbURL);
+	}).
+	config(function($httpProvider){
+		delete $httpProvider.defaults.headers.common['X-Requested-With'];
+	}).
 
-	// Firebase
+	config(function($routeProvider) {
+		$routeProvider.
+			when('/', {controller:SyncCtrl, templateUrl:'sync.html'}).
+			otherwise({redirectTo:'/'});
+	});
 
+function SyncCtrl($scope, Projects) {
+	$scope.projects = Projects;
+}
+
+<<<<<<< HEAD
 >>>>>>> gh-pages
 	var myDataRef = new Firebase('https://jam-sync.firebaseio.com/');
 	myDataRef.on('value', function(snapshot){
@@ -50,106 +68,137 @@ $(document).ready(function() {
 		console.log(offset);
 		estimatedServerTimeMs = new Date().getTime() + offset;
 	});
-	console.log(offset);
+=======
 
+// Firebase
+
+var myDataRef = new Firebase('https://jam-sync.firebaseio.com/');
+myDataRef.on('value', function(snapshot){
+	console.log('Playing', snapshot.val().playing);
+	playing = snapshot.val().playing;
+	startTime = snapshot.val().startTime;
+});
+
+// clock skew
+
+var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
+offsetRef.on("value", function(snap) {
+	offset = snap.val();
+>>>>>>> gh-pages
+	console.log(offset);
+	estimatedServerTimeMs = new Date().getTime() + offset;
+});
+console.log(offset);
+
+// basic setup
+
+bpm = 90;
+upperTimeSignature = 4;
+lowerTimeSignature = 4;
+frequency = (60 / bpm) * 1000; //in ms
+playing = false;
+progression = [ 'E', 'B', 'C#', 'A'];
+currentChordNumber = -1;
+beatInMeasure = -1;
+startTime = 9375935090405;
+var startPlaying;
+var checkIfStarted;
+var offset;
+
+togglePlay = function(){
+	if (playing) {
+		turnStuffOff();
+	} else {
+		var d = new Date();
+		startTime = d.getTime() + 3000 - offset;
+		myDataRef.update({startTime: startTime});
+		playing = true;
+	}
+
+<<<<<<< HEAD
 	bpm = 90;
 	upperTimeSignature = 4;
 	lowerTimeSignature = 4;
 	frequency = (60 / bpm) * 1000; //in ms
+=======
+	myDataRef.update({playing: playing});
+	
+};
+
+turnStuffOff = function(){
+>>>>>>> gh-pages
 	playing = false;
-	progression = [ 'E', 'B', 'C#', 'A'];
+	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 	currentChordNumber = -1;
 	beatInMeasure = -1;
-	startTime = 9375935090405;
-	var startPlaying;
-	var checkIfStarted;
-	var offset;
-
-	togglePlay = function(){
-		if (playing) {
-			turnStuffOff();
-		} else {
-			var d = new Date();
-			startTime = d.getTime() + 3000 - offset;
-			myDataRef.update({startTime: startTime});
-			playing = true;
-		}
-
-		myDataRef.update({playing: playing});
-		
-	};
-
-	turnStuffOff = function(){
-		playing = false;
-		//angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
-		currentChordNumber = -1;
-		beatInMeasure = -1;
-		activateChord(0);
-		clearInterval(startPlaying);
-		checkIfStarted = setInterval(checkStart, 50);
-	};
-
-	moveOn = function(){
-		var d = new Date();
-		if (playing === true){
-			if (d.getTime() + offset >= startTime) {
-				beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
-				flashMetronome();
-				console.log('in move on', currentChordNumber);
-				if (beatInMeasure === 0) {
-					currentChordNumber = nextChord(currentChordNumber);
-				}
-				console.log('beep');
-			} else {
-				
-			}
-		} else {
-			turnStuffOff();
-		}
-	};
-
-	flashMetronome = function(){
-		angular.element('.metronome').removeClass('off').addClass('flashOn');
-		setTimeout(function(){angular.element('.metronome').removeClass('flashOn').addClass('off');}, 100);
-	};
-
-	nextChord = function(chordNumber){
-		console.log('in next chord', chordNumber);
-		//deactivateChord(chordNumber + 1);
-		chordNumber = ((chordNumber + 1) % 4);
-		activateChord(chordNumber + 1);
-		return chordNumber;
-	};
-
-	activateChord = function(chordNumber){
-		angular.element('.chord-viewer > div.active').removeClass('active').addClass('inactive');
-		angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').addClass('active').removeClass('inactive');
-	};
-
-	deactivateChord = function(chordNumber){
-		angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
-	};
-
-	checkStart = function(){
-		var d = new Date();
-
-		if (playing === true){
-			if ((d.getTime() + offset) >= startTime) {
-				angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
-				startPlaying = setInterval(moveOn, frequency);
-				clearInterval(checkIfStarted);
-			} else {
-				angular.element('.play-stop').removeClass('btn-primary').addClass('btn-warning');
-			}
-		} else {
-			console.log ('still checking');
-		}
-	};
-	
+	activateChord(0);
+	clearInterval(startPlaying);
 	checkIfStarted = setInterval(checkStart, 50);
+};
 
+moveOn = function(){
+	var d = new Date();
+	if (playing === true){
+		if (d.getTime() + offset >= startTime) {
+			beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
+			flashMetronome();
+			console.log('in move on', currentChordNumber);
+			if (beatInMeasure === 0) {
+				currentChordNumber = nextChord(currentChordNumber);
+			}
+			console.log('beep');
+		} else {
+			
+		}
+	} else {
+		turnStuffOff();
+	}
+};
+
+flashMetronome = function(){
+	angular.element('.metronome').removeClass('off').addClass('flashOn');
+	setTimeout(function(){angular.element('.metronome').removeClass('flashOn').addClass('off');}, 100);
+};
+
+nextChord = function(chordNumber){
+	console.log('in next chord', chordNumber);
+	//deactivateChord(chordNumber + 1);
+	chordNumber = ((chordNumber + 1) % 4);
+	activateChord(chordNumber + 1);
+	return chordNumber;
+};
+
+activateChord = function(chordNumber){
+	angular.element('.chord-viewer > div.active').removeClass('active').addClass('inactive');
+	angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').addClass('active').removeClass('inactive');
+};
+
+deactivateChord = function(chordNumber){
+	angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
+};
+
+checkStart = function(){
+	var d = new Date();
+
+	if (playing === true){
+		if ((d.getTime() + offset) >= startTime) {
+			angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
+			startPlaying = setInterval(moveOn, frequency);
+			clearInterval(checkIfStarted);
+		} else {
+			angular.element('.play-stop').removeClass('btn-primary').addClass('btn-warning');
+		}
+	} else {
+		console.log ('still checking');
+	}
+};
+
+<<<<<<< HEAD
 <<<<<<< HEAD
 });
 =======
 //});
+>>>>>>> gh-pages
+=======
+checkIfStarted = setInterval(checkStart, 50);
 >>>>>>> gh-pages
