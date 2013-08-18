@@ -1,37 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-$(document).ready(function() {
-=======
-//$(document).ready(function() {
-
-
-
-	// Angular
-	angular.module('project', ['firebase']).
-		value('fbURL', 'https://jam-sync.firebaseio.com/').
-		factory('Projects', function(angularFireCollection, fbURL) {
-			return angularFireCollection(fbURL);
-		}).
-		config(function($httpProvider){
-			delete $httpProvider.defaults.headers.common['X-Requested-With'];
-		}).
-
-		config(function($routeProvider) {
-			$routeProvider.
-				when('/', {controller:SyncCtrl, templateUrl:'sync.html'}).
-				//when('/edit/:projectId', {controller:EditCtrl, templateUrl:'detail.html'}).
-				//when('/new', {controller:CreateCtrl, templateUrl:'detail.html'}).
-				otherwise({redirectTo:'/'});
-		});
-
-	function SyncCtrl($scope, Projects) {
-		$scope.projects = Projects;
-	}
-/*
-		myapp.controller('MyCtrl', ['$scope', 'angularFire',
-			function MyCtrl($scope, angularFire) {
-=======
->>>>>>> gh-pages
 
 // Angular
 angular.module('project', ['firebase']).
@@ -53,22 +19,6 @@ function SyncCtrl($scope, Projects) {
 	$scope.projects = Projects;
 }
 
-<<<<<<< HEAD
->>>>>>> gh-pages
-	var myDataRef = new Firebase('https://jam-sync.firebaseio.com/');
-	myDataRef.on('value', function(snapshot){
-		console.log('Playing', snapshot.val().playing);
-		playing = snapshot.val().playing;
-		startTime = snapshot.val().startTime;
-	});
-
-	var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
-	offsetRef.on("value", function(snap) {
-		offset = snap.val();
-		console.log(offset);
-		estimatedServerTimeMs = new Date().getTime() + offset;
-	});
-=======
 
 // Firebase
 
@@ -84,7 +34,6 @@ myDataRef.on('value', function(snapshot){
 var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
 offsetRef.on("value", function(snap) {
 	offset = snap.val();
->>>>>>> gh-pages
 	console.log(offset);
 	estimatedServerTimeMs = new Date().getTime() + offset;
 });
@@ -115,18 +64,11 @@ togglePlay = function(){
 		playing = true;
 	}
 
-<<<<<<< HEAD
-	bpm = 90;
-	upperTimeSignature = 4;
-	lowerTimeSignature = 4;
-	frequency = (60 / bpm) * 1000; //in ms
-=======
 	myDataRef.update({playing: playing});
 	
 };
 
 turnStuffOff = function(){
->>>>>>> gh-pages
 	playing = false;
 	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 	currentChordNumber = -1;
@@ -193,12 +135,4 @@ checkStart = function(){
 	}
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-});
-=======
-//});
->>>>>>> gh-pages
-=======
 checkIfStarted = setInterval(checkStart, 50);
->>>>>>> gh-pages
