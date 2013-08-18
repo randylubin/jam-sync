@@ -5,6 +5,9 @@
 	// Angular
 	angular.module('project', ['firebase']).
 		value('fbURL', 'https://jam-sync.firebaseio.com/').
+		factory('Projects', function(angularFireCollection, fbURL) {
+			return angularFireCollection(fbURL);
+		}).
 		config(function($httpProvider){
 			delete $httpProvider.defaults.headers.common['X-Requested-With'];
 		}).
@@ -80,7 +83,7 @@
 
 	turnStuffOff = function(){
 		playing = false;
-		$('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
+		//$('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 		currentChordNumber = -1;
 		beatInMeasure = -1;
 		activateChord(0);
