@@ -5,10 +5,10 @@ body {
 	padding-top: 15px;
 }
 
-a:link {color:#FFCD00; text-decoration:underline;} /*a normal, unvisited link*/
-a:visited {color:#FFCD00;text-decoration:underline;}  /* visited link */
-a:hover {color:#BDB76B;text-decoration:underline;} /*a link when the user mouses over it*/
-a:active {color:#FFCD00;text-decoration:underline;} /*a link the moment it is clicked*/
+a:link {color:#FFF3C2;} /*a normal, unvisited link*/
+a:visited {color:#FFF3C2;}  /* visited link */
+a:hover {color:#FFF3C2;text-decoration:underline;} /*a link when the user mouses over it*/
+a:active {color:#FFF3C2;text-decoration:underline;} /*a link the moment it is clicked*/
 
 .metronome {
 	border-radius: 100%;
@@ -24,13 +24,18 @@ a:active {color:#FFCD00;text-decoration:underline;} /*a link the moment it is cl
 	background-color: #FFCD00;
 }
 
+.chord {
+	padding-right: 10%;
+}
+
 .active {
-	font-size: 5.5em;
-	margin-top: 25px;
+	font-size: 40vh;
 }
 
 .inactive {
-	margin-top: 200px;
+	margin-top: 20px;
+	vertical-align: 320%;
+
 }
 
 .top-info {
@@ -38,6 +43,5 @@ a:active {color:#FFCD00;text-decoration:underline;} /*a link the moment it is cl
 }
 
 .chord-viewer {
-	height: 400px;
-	font-size: 300%;
+
 }
