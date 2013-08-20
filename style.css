@@ -5,6 +5,11 @@ body {
 	padding-top: 15px;
 }
 
+a:link {color:#FFCD00; text-decoration:underline;} /*a normal, unvisited link*/
+a:visited {color:#FFCD00;text-decoration:underline;}  /* visited link */
+a:hover {color:#BDB76B;text-decoration:underline;} /*a link when the user mouses over it*/
+a:active {color:#FFCD00;text-decoration:underline;} /*a link the moment it is clicked*/
+
 .metronome {
 	border-radius: 100%;
 	width: 50px;
