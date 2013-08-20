@@ -30,7 +30,7 @@ a:active {color:#FFCD00;text-decoration:underline;} /*a link the moment it is cl
 }
 
 .inactive {
-	margin-top: 80px;
+	margin-top: 200px;
 }
 
 .top-info {
@@ -38,5 +38,6 @@ a:active {color:#FFCD00;text-decoration:underline;} /*a link the moment it is cl
 }
 
 .chord-viewer {
-	height: 200px;
+	height: 400px;
+	font-size: 300%;
 }
