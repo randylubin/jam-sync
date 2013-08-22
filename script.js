@@ -111,12 +111,12 @@ nextChord = function(chordNumber){
 };
 
 activateChord = function(chordNumber){
-	angular.element('.chord-viewer > div.active').removeClass('active').addClass('inactive');
-	angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').addClass('active').removeClass('inactive');
+	angular.element('.chord-viewer > span.active').removeClass('active').addClass('inactive');
+	angular.element('.chord-viewer > span:nth-child('+ chordNumber +')').addClass('active').removeClass('inactive');
 };
 
 deactivateChord = function(chordNumber){
-	angular.element('.chord-viewer > div:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
+	angular.element('.chord-viewer > span:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
 };
 
 checkStart = function(){
