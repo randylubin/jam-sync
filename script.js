@@ -73,7 +73,7 @@ turnStuffOff = function(){
 	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 	currentChordNumber = -1;
 	beatInMeasure = -1;
-	activateChord(0);
+	activateChord(1);
 	clearInterval(startPlaying);
 	checkIfStarted = setInterval(checkStart, 50);
 };
