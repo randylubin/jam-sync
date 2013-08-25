@@ -54,31 +54,25 @@ var startPlaying;
 var checkIfStarted;
 var offset;
 
-togglePlay = function(){
-	if (playing) {
-		turnStuffOff();
+checkStart = function(){
+	var d = new Date();
+
+	if (playing === true){
+		if ((d.getTime() + offset) >= startTime) {
+			angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
+			startPlaying = setInterval(moveOn, frequency);
+			clearInterval(checkIfStarted);
+			checkIfStarted = false;
+		} else {
+			angular.element('.play-stop').removeClass('btn-primary').addClass('btn-warning');
+		}
 	} else {
-		var d = new Date();
-		startTime = d.getTime() + 3000 - offset;
-		myDataRef.update({startTime: startTime});
-		playing = true;
+		console.log ('still checking');
 	}
-
-	myDataRef.update({playing: playing});
-	
-};
-
-turnStuffOff = function(){
-	playing = false;
-	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
-	currentChordNumber = -1;
-	beatInMeasure = -1;
-	activateChord(1);
-	clearInterval(startPlaying);
-	checkIfStarted = setInterval(checkStart, 50);
 };
 
 moveOn = function(){
+	console.log('moveOn');
 	var d = new Date();
 	if (playing === true){
 		if (d.getTime() + offset >= startTime) {
@@ -95,6 +89,32 @@ moveOn = function(){
 	} else {
 		turnStuffOff();
 	}
+};
+
+turnStuffOff = function(){
+	clearInterval(checkIfStarted);
+	playing = false;
+	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
+	currentChordNumber = -1;
+	beatInMeasure = -1;
+	activateChord(1);
+	clearInterval(startPlaying);
+	checkIfStarted = setInterval(checkStart, 50);
+	console.log('turning stuff off');
+};
+
+togglePlay = function(){
+	if (playing) {
+		turnStuffOff();
+	} else {
+		var d = new Date();
+		startTime = d.getTime() + 3000 - offset;
+		myDataRef.update({startTime: startTime});
+		playing = true;
+	}
+
+	myDataRef.update({playing: playing});
+	
 };
 
 flashMetronome = function(){
@@ -119,20 +139,6 @@ deactivateChord = function(chordNumber){
 	angular.element('.chord-viewer > span:nth-child('+ chordNumber +')').removeClass('active').addClass('inactive');
 };
 
-checkStart = function(){
-	var d = new Date();
 
-	if (playing === true){
-		if ((d.getTime() + offset) >= startTime) {
-			angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
-			startPlaying = setInterval(moveOn, frequency);
-			clearInterval(checkIfStarted);
-		} else {
-			angular.element('.play-stop').removeClass('btn-primary').addClass('btn-warning');
-		}
-	} else {
-		console.log ('still checking');
-	}
-};
 
 checkIfStarted = setInterval(checkStart, 50);
