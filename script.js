@@ -5,18 +5,26 @@ angular.module('project', ['firebase']).
 	factory('Projects', function(angularFireCollection, fbURL) {
 		return angularFireCollection(fbURL);
 	}).
-	config(function($httpProvider){
+	/*config(function($httpProvider){
 		delete $httpProvider.defaults.headers.common['X-Requested-With'];
-	}).
-
+	}).*/
 	config(function($routeProvider) {
 		$routeProvider.
 			when('/', {controller:SyncCtrl, templateUrl:'sync.html'}).
+			when('/:room', {controller:SyncCtrl, templateUrl:'sync.html'}).
 			otherwise({redirectTo:'/'});
 	});
 
 function SyncCtrl($scope, Projects) {
 	$scope.projects = Projects;
+}
+function bpmCtrl($scope) {
+	$scope.bpm = 90;
+	$scope.change = function(){
+		bpm = $scope.bpm;
+		frequency = (60 / bpm) * 1000;
+		console.log('new bpm', bpm);
+	};
 }
 
 
