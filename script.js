@@ -1,7 +1,9 @@
+//AngularFire
+url = 'https://jam-sync.firebaseio.com/';
 
 // Angular
-angular.module('project', ['firebase']).
-	value('fbURL', 'https://jam-sync.firebaseio.com/').
+angular.module('jam-sync', ['firebase']).
+	value('fbURL', url).
 	factory('Projects', function(angularFireCollection, fbURL) {
 		return angularFireCollection(fbURL);
 	}).
@@ -16,9 +18,9 @@ angular.module('project', ['firebase']).
 	});
 
 function SyncCtrl($scope, Projects) {
+	//var promise = angularFire(url, $scope, 'jamInfo', {});
+
 	$scope.projects = Projects;
-}
-function bpmCtrl($scope) {
 	$scope.bpm = 90;
 	$scope.change = function(){
 		bpm = $scope.bpm;
@@ -27,14 +29,13 @@ function bpmCtrl($scope) {
 	};
 }
 
-
 // Firebase
 
-var myDataRef = new Firebase('https://jam-sync.firebaseio.com/');
+var myDataRef = new Firebase('https://jam-sync.firebaseio.com/jamInfo');
 myDataRef.on('value', function(snapshot){
 	console.log('Playing', snapshot.val().playing);
-	playing = snapshot.val().playing;
-	startTime = snapshot.val().startTime;
+	jamInfo.playing = snapshot.val().playing;
+	jamInfo.startTime = snapshot.val().startTime;
 });
 
 // clock skew
@@ -49,15 +50,17 @@ console.log(offset);
 
 // basic setup
 
+jamInfo = {
+	playing: false,
+	startTime: 9375935090405
+};
 bpm = 90;
 upperTimeSignature = 4;
 lowerTimeSignature = 4;
 frequency = (60 / bpm) * 1000; //in ms
-playing = false;
 progression = [ 'E', 'B', 'C#', 'A'];
 currentChordNumber = -1;
 beatInMeasure = -1;
-startTime = 9375935090405;
 var startPlaying;
 var checkIfStarted;
 var offset;
@@ -65,8 +68,8 @@ var offset;
 checkStart = function(){
 	var d = new Date();
 
-	if (playing === true){
-		if ((d.getTime() + offset) >= startTime) {
+	if (jamInfo.playing === true){
+		if ((d.getTime() + offset) >= jamInfo.startTime) {
 			angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
 			startPlaying = setInterval(moveOn, frequency);
 			clearInterval(checkIfStarted);
@@ -82,8 +85,8 @@ checkStart = function(){
 moveOn = function(){
 	console.log('moveOn');
 	var d = new Date();
-	if (playing === true){
-		if (d.getTime() + offset >= startTime) {
+	if (jamInfo.playing === true){
+		if (d.getTime() + offset >= jamInfo.startTime) {
 			beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
 			flashMetronome();
 			console.log('in move on', currentChordNumber);
@@ -101,7 +104,7 @@ moveOn = function(){
 
 turnStuffOff = function(){
 	clearInterval(checkIfStarted);
-	playing = false;
+	jamInfo.playing = false;
 	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 	currentChordNumber = -1;
 	beatInMeasure = -1;
@@ -112,16 +115,16 @@ turnStuffOff = function(){
 };
 
 togglePlay = function(){
-	if (playing) {
+	if (jamInfo.playing) {
 		turnStuffOff();
 	} else {
 		var d = new Date();
-		startTime = d.getTime() + 3000 - offset;
-		myDataRef.update({startTime: startTime});
-		playing = true;
+		jamInfo.startTime = d.getTime() + 3000 - offset;
+		myDataRef.update({startTime: jamInfo.startTime});
+		jamInfo.playing = true;
 	}
 
-	myDataRef.update({playing: playing});
+	myDataRef.update({playing: jamInfo.playing});
 	
 };
 
