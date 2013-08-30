@@ -1,10 +1,10 @@
 //AngularFire
-url = 'https://jam-sync.firebaseio.com/';
+url = 'https://jam-sync.firebaseio.com/jamInfo';
 
 // Angular
-angular.module('jam-sync', ['firebase']).
+jamSync = angular.module('jamSync', ['firebase']).
 	value('fbURL', url).
-	factory('Projects', function(angularFireCollection, fbURL) {
+	factory('JamInfo', function(angularFireCollection, fbURL) {
 		return angularFireCollection(fbURL);
 	}).
 	/*config(function($httpProvider){
@@ -12,22 +12,54 @@ angular.module('jam-sync', ['firebase']).
 	}).*/
 	config(function($routeProvider) {
 		$routeProvider.
-			when('/', {controller:SyncCtrl, templateUrl:'sync.html'}).
-			when('/:room', {controller:SyncCtrl, templateUrl:'sync.html'}).
+			when('/', {controller:'SyncCtrl', templateUrl:'sync.html'}).
+			when('/room/:room', {controller:'SyncCtrl', templateUrl:'sync.html'}).
+			when('/404', {controller:'SyncCtrl', templateUrl:'404.html'}).
+			when('/room-select/', {controller:'roomPickerCtrl', templateUrl:'roomPicker.html'}).
 			otherwise({redirectTo:'/'});
 	});
 
-function SyncCtrl($scope, Projects) {
-	//var promise = angularFire(url, $scope, 'jamInfo', {});
 
-	$scope.projects = Projects;
-	$scope.bpm = 90;
-	$scope.change = function(){
-		bpm = $scope.bpm;
-		frequency = (60 / bpm) * 1000;
-		console.log('new bpm', bpm);
-	};
-}
+jamSync.controller('SyncCtrl', ['$scope', 'angularFire',
+	function SyncCtrl($scope, angularFire){
+		var url = 'https://jam-sync.firebaseio.com/jamInfo';
+		var promise = angularFire(url, $scope, 'jamInfo', {});
+
+		$scope.bpmOptions = [60, 90, 120, 150, 180];
+		$scope.chordProgression = ['E', 'B', 'C#', 'A'];
+
+		promise.then(function(){
+			console.log('from fb', $scope.jamInfo);
+			$scope.$watch('jamInfo.bpm', function(){
+				frequency = (60 / $scope.jamInfo.bpm) * 1000;
+				console.log('new bpm', $scope.jamInfo.bpm);
+			});
+			//$scope.jamInfo = angular.copy($scope.remote);
+			//$scope.bpm = $scope.jamInfo.bpm;
+		});
+	}
+]);
+
+jamSync.controller('roomPickerCtrl', ['$scope', '$location', 'angularFire',
+	function roomPickerCtrl($scope, $location, angularFire){
+		
+		$scope.roomNumber = [];
+		$scope.addNum = function(num){
+			console.log('added', num);
+			$scope.roomNumber.push(num);
+			if ($scope.roomNumber.length >= 4){
+				$location.path('/room/' + $scope.roomNumber.join(''));
+			}
+		};
+		
+		$scope.deleteNum = function(){
+			$scope.roomNumber.pop();
+		};
+		$scope.clearNum = function(){
+			$scope.roomNumber = [];
+		};
+	}
+]);
 
 // Firebase
 
