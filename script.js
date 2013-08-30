@@ -1,32 +1,73 @@
+//AngularFire
+url = 'https://jam-sync.firebaseio.com/jamInfo';
 
 // Angular
-angular.module('project', ['firebase']).
-	value('fbURL', 'https://jam-sync.firebaseio.com/').
-	factory('Projects', function(angularFireCollection, fbURL) {
+jamSync = angular.module('jamSync', ['firebase']).
+	value('fbURL', url).
+	factory('JamInfo', function(angularFireCollection, fbURL) {
 		return angularFireCollection(fbURL);
 	}).
-	config(function($httpProvider){
+	/*config(function($httpProvider){
 		delete $httpProvider.defaults.headers.common['X-Requested-With'];
-	}).
-
+	}).*/
 	config(function($routeProvider) {
 		$routeProvider.
-			when('/', {controller:SyncCtrl, templateUrl:'sync.html'}).
+			when('/', {controller:'SyncCtrl', templateUrl:'sync.html'}).
+			when('/room/:room', {controller:'SyncCtrl', templateUrl:'sync.html'}).
+			when('/404', {controller:'SyncCtrl', templateUrl:'404.html'}).
+			when('/room-select/', {controller:'roomPickerCtrl', templateUrl:'roomPicker.html'}).
 			otherwise({redirectTo:'/'});
 	});
 
-function SyncCtrl($scope, Projects) {
-	$scope.projects = Projects;
-}
 
+jamSync.controller('SyncCtrl', ['$scope', 'angularFire',
+	function SyncCtrl($scope, angularFire){
+		var url = 'https://jam-sync.firebaseio.com/jamInfo';
+		var promise = angularFire(url, $scope, 'jamInfo', {});
+
+		$scope.bpmOptions = [60, 90, 120, 150, 180];
+		$scope.chordProgression = ['E', 'B', 'C#', 'A'];
+
+		promise.then(function(){
+			console.log('from fb', $scope.jamInfo);
+			$scope.$watch('jamInfo.bpm', function(){
+				frequency = (60 / $scope.jamInfo.bpm) * 1000;
+				console.log('new bpm', $scope.jamInfo.bpm);
+			});
+			//$scope.jamInfo = angular.copy($scope.remote);
+			//$scope.bpm = $scope.jamInfo.bpm;
+		});
+	}
+]);
+
+jamSync.controller('roomPickerCtrl', ['$scope', '$location', 'angularFire',
+	function roomPickerCtrl($scope, $location, angularFire){
+		
+		$scope.roomNumber = [];
+		$scope.addNum = function(num){
+			console.log('added', num);
+			$scope.roomNumber.push(num);
+			if ($scope.roomNumber.length >= 4){
+				$location.path('/room/' + $scope.roomNumber.join(''));
+			}
+		};
+		
+		$scope.deleteNum = function(){
+			$scope.roomNumber.pop();
+		};
+		$scope.clearNum = function(){
+			$scope.roomNumber = [];
+		};
+	}
+]);
 
 // Firebase
 
-var myDataRef = new Firebase('https://jam-sync.firebaseio.com/');
+var myDataRef = new Firebase('https://jam-sync.firebaseio.com/jamInfo');
 myDataRef.on('value', function(snapshot){
 	console.log('Playing', snapshot.val().playing);
-	playing = snapshot.val().playing;
-	startTime = snapshot.val().startTime;
+	jamInfo.playing = snapshot.val().playing;
+	jamInfo.startTime = snapshot.val().startTime;
 });
 
 // clock skew
@@ -41,15 +82,17 @@ console.log(offset);
 
 // basic setup
 
+jamInfo = {
+	playing: false,
+	startTime: 9375935090405
+};
 bpm = 90;
 upperTimeSignature = 4;
 lowerTimeSignature = 4;
 frequency = (60 / bpm) * 1000; //in ms
-playing = false;
 progression = [ 'E', 'B', 'C#', 'A'];
 currentChordNumber = -1;
 beatInMeasure = -1;
-startTime = 9375935090405;
 var startPlaying;
 var checkIfStarted;
 var offset;
@@ -57,8 +100,8 @@ var offset;
 checkStart = function(){
 	var d = new Date();
 
-	if (playing === true){
-		if ((d.getTime() + offset) >= startTime) {
+	if (jamInfo.playing === true){
+		if ((d.getTime() + offset) >= jamInfo.startTime) {
 			angular.element('.play-stop').removeClass('btn-warning').addClass('btn-danger');
 			startPlaying = setInterval(moveOn, frequency);
 			clearInterval(checkIfStarted);
@@ -74,8 +117,8 @@ checkStart = function(){
 moveOn = function(){
 	console.log('moveOn');
 	var d = new Date();
-	if (playing === true){
-		if (d.getTime() + offset >= startTime) {
+	if (jamInfo.playing === true){
+		if (d.getTime() + offset >= jamInfo.startTime) {
 			beatInMeasure = (beatInMeasure + 1) % lowerTimeSignature;
 			flashMetronome();
 			console.log('in move on', currentChordNumber);
@@ -93,7 +136,7 @@ moveOn = function(){
 
 turnStuffOff = function(){
 	clearInterval(checkIfStarted);
-	playing = false;
+	jamInfo.playing = false;
 	angular.element('.play-stop').removeClass('btn-danger').removeClass('btn-warning').addClass('btn-primary');
 	currentChordNumber = -1;
 	beatInMeasure = -1;
@@ -104,16 +147,16 @@ turnStuffOff = function(){
 };
 
 togglePlay = function(){
-	if (playing) {
+	if (jamInfo.playing) {
 		turnStuffOff();
 	} else {
 		var d = new Date();
-		startTime = d.getTime() + 3000 - offset;
-		myDataRef.update({startTime: startTime});
-		playing = true;
+		jamInfo.startTime = d.getTime() + 3000 - offset;
+		myDataRef.update({startTime: jamInfo.startTime});
+		jamInfo.playing = true;
 	}
 
-	myDataRef.update({playing: playing});
+	myDataRef.update({playing: jamInfo.playing});
 	
 };
 
