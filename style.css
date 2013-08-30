@@ -10,10 +10,26 @@ a:visited {color:#FFF3C2;}  /* visited link */
 a:hover {color:#FFF3C2;text-decoration:underline;} /*a link when the user mouses over it*/
 a:active {color:#FFF3C2;text-decoration:underline;} /*a link the moment it is clicked*/
 
+.num-pad div button{
+	margin: 20px 10px 0 10px;
+}
+
 .metronome {
 	border-radius: 100%;
 	width: 65px;
 	height: 65px;
+}
+
+:focus{
+	background-color: #FFCD00;
+	color: #66A3D2;
+	padding: 0 5px 0 5px;
+}
+
+select {
+	background-color: #FFCD00;
+	color: #66A3D2;
+	padding: 0 5px 0 5px;
 }
 
 .off {
