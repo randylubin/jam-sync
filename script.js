@@ -4,26 +4,28 @@ url = 'https://jam-sync.firebaseio.com/jamInfo';
 // Angular
 jamSync = angular.module('jamSync', ['firebase']).
 	value('fbURL', url).
-	factory('JamInfo', function(angularFireCollection, fbURL) {
+	/*factory('JamInfo', function(angularFireCollection, fbURL) {
 		return angularFireCollection(fbURL);
-	}).
+	}).*/
 	/*config(function($httpProvider){
 		delete $httpProvider.defaults.headers.common['X-Requested-With'];
 	}).*/
 	config(function($routeProvider) {
 		$routeProvider.
-			when('/', {controller:'SyncCtrl', templateUrl:'sync.html'}).
-			when('/room/:room', {controller:'SyncCtrl', templateUrl:'sync.html'}).
-			when('/404', {controller:'SyncCtrl', templateUrl:'404.html'}).
-			when('/room-select/', {controller:'roomPickerCtrl', templateUrl:'roomPicker.html'}).
+			when('/', {controller:'SyncCtrl', templateUrl:'views/sync.html'}).
+			when('/room/:room', {controller:'SyncCtrl', templateUrl:'views/sync.html'}).
+			when('/404', {controller:'SyncCtrl', templateUrl:'views/404.html'}).
+			when('/room-select/', {controller:'roomPickerCtrl', templateUrl:'views/roomPicker.html'}).
 			otherwise({redirectTo:'/'});
 	});
 
 
-jamSync.controller('SyncCtrl', ['$scope', 'angularFire',
-	function SyncCtrl($scope, angularFire){
+jamSync.controller('SyncCtrl', ['$scope', '$routeParams', 'angularFire',
+	function SyncCtrl($scope, $routeParams, angularFire){
 		var url = 'https://jam-sync.firebaseio.com/jamInfo';
 		var promise = angularFire(url, $scope, 'jamInfo', {});
+
+		console.log('room number:', $routeParams.room);
 
 		$scope.bpmOptions = [60, 90, 120, 150, 180];
 		$scope.chordProgression = ['E', 'B', 'C#', 'A'];
