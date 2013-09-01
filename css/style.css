@@ -10,14 +10,24 @@ a:visited {color:#FFF3C2;}  /* visited link */
 a:hover {color:#FFF3C2;text-decoration:underline;} /*a link when the user mouses over it*/
 a:active {color:#FFF3C2;text-decoration:underline;} /*a link the moment it is clicked*/
 
-.num-pad div button{
-	margin: 20px 10px 0 10px;
+.num-pad {
+	max-width: 750px;
+	margin: 0 auto;
+}
+
+.btn-holder{
+	padding: 20px 10px 0 10px;
+	 max-width:250px;
 }
 
 .metronome {
 	border-radius: 100%;
 	width: 65px;
 	height: 65px;
+}
+
+.credit {
+	padding-top: 20px;
 }
 
 :focus{

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html ng-app="jamSync">
 <head>
+	<title>Jam-Sync</title>
+
 	<link href = "css/bootstrap.css" rel = "stylesheet">
 	<link href = "css/style.css" rel = "stylesheet">
 	
@@ -20,8 +22,13 @@
 
 </head>
 <body>
-	<div class = "container" ng-view>
-		
+	<div class = "container" >
+		<div ng-view></div>
+		<div class = "row">
+			<div class = "text-center col-8 credit">
+				By <a href="http://randylubin.com">Randy</a> and <a href="http://greglubin.com">Greg</a> Lubin
+			</div>
+		</div>
 	</div>
 </body>
 </html>
