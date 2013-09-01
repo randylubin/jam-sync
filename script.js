@@ -49,6 +49,7 @@ jamSync.controller('SyncCtrl', ['$scope', '$timeout', '$routeParams', 'angularFi
 			];
 
 		$scope.metronomeLight = 'off';
+		$scope.playStatus = 'btn-warning'
 
 		var offsetRef = new Firebase("https://jam-sync.firebaseio.com/.info/serverTimeOffset");
 		offsetRef.on("value", function(snap) {
@@ -73,11 +74,12 @@ jamSync.controller('SyncCtrl', ['$scope', '$timeout', '$routeParams', 'angularFi
 		promise.then(function(){
 			console.log('from fb', $scope.jamInfo);
 
+			$scope.playStatus = 'btn-primary';
+
 			// add defaults, if none
 			if (!$scope.jamInfo.bpm){
 				$scope.jamInfo = {
 					bpm: 90,
-					playStatus: 'btn-primary',
 					playing: false,
 					startTime: 9378000726393,
 					disconnected: false
@@ -98,12 +100,12 @@ jamSync.controller('SyncCtrl', ['$scope', '$timeout', '$routeParams', 'angularFi
 
 				if ($scope.jamInfo.playing === true){
 					if ((d.getTime() + offset) >= $scope.jamInfo.startTime) {
-						$scope.jamInfo.playStatus = 'btn-danger';
+						$scope.playStatus = 'btn-danger';
 						$scope.startPlaying = $timeout($scope.moveOn, frequency);
 						$timeout.cancel(checkIfStarted);
 						checkIfStarted = false;
 					} else {
-						$scope.jamInfo.playStatus = 'btn-warning';
+						$scope.playStatus = 'btn-warning';
 						$scope.$apply(); //TODO: refactor this
 						$timeout(checkStart, 50);
 					}
@@ -131,7 +133,7 @@ jamSync.controller('SyncCtrl', ['$scope', '$timeout', '$routeParams', 'angularFi
 						$scope.$apply(); //TODO: refactor this
 						
 					} else {
-						$scope.jamInfo.playStatus = 'btn-warning';
+						$scope.playStatus = 'btn-warning';
 						$scope.$apply(); //TODO: refactor this
 					}
 					$scope.startPlaying = $timeout($scope.moveOn, frequency);
@@ -159,7 +161,7 @@ jamSync.controller('SyncCtrl', ['$scope', '$timeout', '$routeParams', 'angularFi
 				
 				$timeout.cancel(checkIfStarted);
 				$scope.jamInfo.playing = false;
-				$scope.jamInfo.playStatus = 'btn-primary';
+				$scope.playStatus = 'btn-primary';
 				$scope.toggleChord(currentChordNumber);
 				$scope.toggleChord(0);
 				currentChordNumber = 0;
