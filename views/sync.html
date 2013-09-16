@@ -16,8 +16,7 @@
 
 	<div class="row">
 		<div class="chord-viewer text-center col-xs-12">
-			<span class="chord {{chord.status}}" ng-repeat="chord in chordProgression">{{chord.name}}</span>
-			
+			<span class="chord {{chord.status}}" ng-click="editChord($index)" ng-repeat="chord in chordProgression">{{chord.name}}</span>		
 		</div>
 	</div>
 </div>
