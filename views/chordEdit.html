@@ -1,0 +1,30 @@
+<h2>Build chord {{chordNumber}}: {{chordInProgress.join('')}}</h2>
+<div class="row">
+	<div class="col-xs-3">
+		<p class="btn-primary btn-block" ng-click='addToChord("A")'>A</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("B")'>B</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("C")'>C</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("D")'>D</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("E")'>E</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("F")'>F</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("G")'>G</p>
+	</div>
+	<div class="col-xs-3">	
+		<p class="btn-primary btn-block" ng-click='addToChord("&#35")'>&#35</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("&#9837")'>&#9837</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("maj")'>Maj</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("m")'>Min</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("aug")'>Aug</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("dim")'>Dim</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("sus")'>Sus</p>
+	</div>
+	<div class="col-xs-3">
+		<p class="btn-primary btn-block" ng-click='addToChord("7")'>7th</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("9")'>9th</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("11")'>11th</p>
+		<p class="btn-primary btn-block" ng-click='addToChord("13")'>13th</p>
+		<p class="btn-warning btn-block" ng-click="deleteFromChord()">Delete</p>
+		<p class="btn-danger btn-block" ng-click="clearChord()">Clear</p>
+		<p class="btn-success btn-block" ng-click="saveChord()">Save</p>
+	</div>
+</div>
