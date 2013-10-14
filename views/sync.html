@@ -1,7 +1,7 @@
 <div>
 	<div class = "row">
 		<div class = "top-info play-controls col-xs-4">
-			<button type="button" class="btn-block {{playStatus}} play-stop" ng-click="togglePlay()" ng-disabled="{{jamInfo.disconnected}}">Play / Stop</button>
+			<button type="button" class="btn-block {{playStatus}} play-stop" ng-click="togglePlay()" ng-disabled="jamInfo.disconnected">Play / Stop</button>
 		</div>
 		<div class = "top-info time-stat col-xs-4 col-sm-offset-1">
 			BPM: 
@@ -16,8 +16,7 @@
 
 	<div class="row">
 		<div class="chord-viewer text-center col-xs-12">
-			<span class="chord {{chord.status}}" ng-repeat="chord in chordProgression">{{chord.name}}</span>
-			
+			<span class="chord {{activeChordMap[chord.number]}}" ng-click="editChord($index)" ng-repeat="chord in chordProgression">{{chord.name}}</span>		
 		</div>
 	</div>
 </div>
