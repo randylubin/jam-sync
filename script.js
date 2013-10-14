@@ -20,10 +20,11 @@ jamSync = angular.module('jamSync', ['firebase']).
 	});
 
 
-jamSync.factory('chordService', function($rootScope) {
+jamSync.factory('chordService', function($rootScope, $timeout) {
 	var chordService = {};
 
 	chordService.chord = [];
+	chordService.updated = false;
 
 	chordService.prepForBroadcast = function(newChord, index) {
 		this.chord = newChord;
@@ -34,17 +35,21 @@ jamSync.factory('chordService', function($rootScope) {
 
 	chordService.chordProgression = [
 				{name: 'E',
-				status: 'active'},
+				number: 0},
 				{name: 'B',
-				status: 'inactive'},
+				number: 1},
 				{name: 'C#',
-				status: 'inactive'},
+				number: 2},
 				{name: 'A',
-				status: 'inactive'}
+				number: 3}
 			];
 
 	chordService.broadcastItem = function(){
-		$rootScope.$broadcast('updateChord');
+		$timeout(function(){
+			$rootScope.$broadcast('updateChord');
+		}, 100);
+		chordService.updated = true;
+		console.log('updating chord broadcast');
 	};
 
 	return chordService;
@@ -55,11 +60,14 @@ jamSync.controller('SyncCtrl', ['$scope', 'chordService', '$location', '$timeout
 
 		justEntered = true;
 
+		$scope.activeChordMap = ['active','inactive','inactive','inactive'];
+
 		$scope.jamInfo = {
 			bpm: 90,
 			playStatus: 'btn-warning',
 			playing: false,
 			startTime: 99999999999,
+			chordProgression: chordService.chordProgression,
 			disconnected: true
 		};
 
@@ -105,6 +113,7 @@ jamSync.controller('SyncCtrl', ['$scope', 'chordService', '$location', '$timeout
 					bpm: 90,
 					playing: false,
 					startTime: 9378000726393,
+					chordProgression: chordService.chordProgression,
 					disconnected: false
 				};
 			}
@@ -115,7 +124,15 @@ jamSync.controller('SyncCtrl', ['$scope', 'chordService', '$location', '$timeout
 				console.log('new bpm', $scope.jamInfo.bpm);
 			});
 
+			$scope.$watch('jamInfo.chordProgression', function(){
+				console.log('fire');
+				chordService.chordProgression = $scope.jamInfo.chordProgression;
+				$scope.chordProgression = chordService.chordProgression;
+			});
+
 			checkStart = function(){
+				//$scope.checkUpdatedChords();
+
 				if (justEntered) {
 					return;
 				}
@@ -138,8 +155,22 @@ jamSync.controller('SyncCtrl', ['$scope', 'chordService', '$location', '$timeout
 				}
 			};
 
+			$scope.checkUpdatedChords = function (){
+				if ($scope.jamInfo.chordProgression != chordService.chordProgression){
+					$scope.jamInfo.chordProgression = chordService.chordProgression;
+					console.log ('actually updated');
+					chordService.updated = false;
+				}
+			};
+
 			$scope.moveOn = function(){
 				console.log('$scope.moveOn');
+				
+				//check if chords have changed
+				//$scope.checkUpdatedChords();
+
+
+
 				var d = new Date();
 				if ($scope.jamInfo.playing === true){
 					if (d.getTime() + offset >= $scope.jamInfo.startTime) {
@@ -197,7 +228,7 @@ jamSync.controller('SyncCtrl', ['$scope', 'chordService', '$location', '$timeout
 			};
 
 			$scope.toggleChord = function(chordNumber){
-				$scope.chordProgression[chordNumber].status = ($scope.chordProgression[chordNumber].status =='active') ? 'inactive' : 'active';
+				$scope.activeChordMap[chordNumber] = ($scope.activeChordMap[chordNumber] =='active') ? 'inactive' : 'active';
 			};
 
 
@@ -217,6 +248,8 @@ jamSync.controller('SyncCtrl', ['$scope', 'chordService', '$location', '$timeout
 			$scope.$on('updateChord', function(){
 				console.log('broadcast in main controller', chordService.chord);
 				$scope.chordProgression[chordService.chordIndex].name = chordService.chord;
+				$scope.jamInfo.chordProgression = $scope.chordProgression;
+				//$scope.$apply();
 			});
 
 		});
@@ -264,11 +297,12 @@ jamSync.controller('chordEditCtrl', ['$scope', '$routeParams', 'chordService', '
 
 		$scope.saveChord = function(){
 			chordService.prepForBroadcast($scope.chordInProgress.join(''), $routeParams.chordNumber);
+			$location.path('/room/' + $routeParams.room);
 		};
 
 		$scope.$on('updateChord', function(){
-			console.log('broadcast from edit controller', chordService.chord);
-			$location.path('/room/' + $routeParams.room);
+			//console.log('broadcast from edit controller', chordService.chord);
+			
 		});
 	}
 ]);
